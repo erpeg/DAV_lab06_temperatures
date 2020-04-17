@@ -15,7 +15,7 @@ def main():
 
     data = ut.data_for_scatter(args.input_file, xax=x_axis, yax=y_axis)
 
-    fig, ax = plt.subplots(figsize=(6.5, 4))
+    fig, ax = plt.subplots(figsize=(7, 5))
     years = data[0]
     temps = data[1]
     col_names = data[2]
@@ -25,10 +25,10 @@ def main():
 
     ax.set_ylim(ut.max_min(temps)[2:4])
     # set title of axes
-    ax.set_ylabel(y_axis, fontsize=14)
-    ax.set_xlabel(x_axis, fontsize=14)
+    ax.set_ylabel(y_axis, fontsize=15)
+    ax.set_xlabel(x_axis, fontsize=15)
 
-    ax.tick_params(labelsize=13)
+    ax.tick_params(labelsize=14)
     ax.tick_params(axis='y', labelrotation=90)
 
     print('Plotting fig')
