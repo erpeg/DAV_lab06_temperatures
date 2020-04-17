@@ -63,7 +63,7 @@ def main():
 
     # saving to file
     if args.out_name:
-        with open(args.out_name, 'w', newline='') as csvfile:
+        with open(args.out_name, 'w') as csvfile:
             writer = csv.writer(csvfile)
             writer.writerows(new_list)
         print('File saved as: ' + str(args.out_name))
