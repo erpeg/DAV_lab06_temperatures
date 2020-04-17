@@ -34,8 +34,8 @@ def fahr_to_cel(fahr):
 def main():
     # creating a parser
     parser = argparse.ArgumentParser()
-    parser.add_argument('-i', '--input_name', type=str, help='Pass name of file to clean')
-    parser.add_argument('-o', '--out_name', type=str, help='Pass name of output file')
+    parser.add_argument('-i', '--input_name', type=str, help='path to input .csv file')
+    parser.add_argument('-o', '--out_name', type=str, help='name of output file')
     args = parser.parse_args()
 
     list_of_temps = file_to_nested_list(args.input_name)
@@ -63,7 +63,7 @@ def main():
 
     # saving to file
     if args.out_name:
-        with open(args.out_name, 'w', newline='') as csvfile:
+        with open(args.out_name, 'w') as csvfile:
             writer = csv.writer(csvfile)
             writer.writerows(new_list)
         print('File saved as: ' + str(args.out_name))
