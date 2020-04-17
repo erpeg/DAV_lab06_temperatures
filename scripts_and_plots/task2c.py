@@ -21,7 +21,7 @@ def main():
     temps = data[1]
 
     for year, temp in zip(years, temps):
-        ax.scatter([year] * len(temp), temp, color='black', s=20)
+        ax.scatter([year] * len(temp), temp, color='black', s=20, alpha=0.05)
 
     ax.set_ylim(ut.max_min(temps)[2:4])
 
@@ -62,7 +62,7 @@ def main():
     if args.show_save == '0':
         plt.show()
     else:
-        plt.savefig('plots/task2b.png', bbox_inches='tight')
+        plt.savefig('plots/task2c.png', bbox_inches='tight')
         print('Saving plot in plots dir.')
     print('Done')
 

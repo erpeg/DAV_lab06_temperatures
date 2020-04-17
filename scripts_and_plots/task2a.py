@@ -18,7 +18,6 @@ def main():
     fig, ax = plt.subplots(figsize=(7, 5))
     years = data[0]
     temps = data[1]
-    col_names = data[2]
 
     for year, temp in zip(years, temps):
         ax.scatter([year] * len(temp), temp, edgecolors='black', facecolors='none')
