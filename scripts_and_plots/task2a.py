@@ -35,7 +35,7 @@ def main():
     if args.show_save == '0':
         plt.show()
     else:
-        plt.savefig('plots/task2a.png')
+        plt.savefig('plots/task2a.png', bbox_inches='tight')
         print('Saving plot in plots dir.')
     print('Done')
 
