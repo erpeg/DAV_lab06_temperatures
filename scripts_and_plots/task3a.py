@@ -11,32 +11,40 @@ def main():
     args = parser.parse_args()
 
     # assigning columns' to the proper axes
-    x_axis = 'year'
+    x_axis = 'country_id'
     y_axis = 'AverageTemperatureCelsius'
 
-    data = ut.data_for_scatter(args.input_file, xax=x_axis, yax=y_axis)
+    data = ut.data_for_box(args.input_file, xax=x_axis, yax=y_axis)
 
-    fig, ax = plt.subplots(figsize=(7, 5))
-    years = data[0]
+    fig, ax = plt.subplots(figsize=(10, 7))
+    country = data[0]
     temps = data[1]
 
-    for year, temp in zip(years, temps):
-        ax.scatter([year] * len(temp), temp, color='black', s=20)
-
+    # plotting boxplot
+    bp = ax.boxplot(temps, patch_artist=True, widths=0.5)
     ax.set_ylim(ut.max_min(temps)[2:4])
+
+    # applying styles to boxes
+    ut.boxes_style(bp)
+
+    # custom x-axis labels
+    ax.set_xticklabels(country)
 
     # set title of axes
     ax.set_ylabel(y_axis, fontsize=15)
     ax.set_xlabel(x_axis, fontsize=15)
 
+    # change fill color
+    [box.set(facecolor='white') for box in bp['boxes']]
+
     # applying styles of plotting area
-    ut.plot_gui_setup_scatter(ax, plt)
+    ut.plot_gui_setup_box(ax, plt)
 
     print('Plotting fig')
     if args.show_save == '0':
         plt.show()
     else:
-        plt.savefig('plots/task2b.png', bbox_inches='tight')
+        plt.savefig('plots/task3a.png', bbox_inches='tight')
         print('Saving plot in plots dir.')
     print('Done')
 
