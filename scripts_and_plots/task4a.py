@@ -12,8 +12,22 @@ def main():
     args = parser.parse_args()
 
     df = pd.read_csv(filepath_or_buffer=args.input_file)
-    values = df.groupby(['country_id', 'year', 'City'])['AverageTemperatureCelsius'].mean()
-    grouped_data = df.groupby(['country_id']).apply(lambda grp: grp.groupby('year')['AverageTemperatureCelsius'].mean().to_dict()).to_dict()
+
+    # sorting dataframe
+    df.sort_values(by=['year', 'country_id'])
+
+    # grouping by countries and getting dataframe of countries:years
+    years = df.groupby(['country_id'])['year'].apply(list)
+
+    # getting each year to one list and sorting it
+    proper_years = []
+    for series in years[::1]:
+        proper_years += list(set(series))
+    proper_years.sort()
+
+    # calculating mean per year, per country and saving it to one list
+    temps = df.groupby(['year', 'country_id'])['AverageTemperatureCelsius'].mean()
+    temperatures = [temp for temp in temps]
 
     # assigning columns' to the proper axes
     x_axis = 'year'
@@ -21,9 +35,7 @@ def main():
 
     fig, ax = plt.subplots(figsize=(10, 7))
 
-    countries_to_legend = list(grouped_data.keys())
-    for country, temps_per_year in grouped_data.items():
-        ax.plot(list(temps_per_year.keys()), list(temps_per_year.values()), color='black')
+    ax.plot(proper_years, temperatures, color='black')
 
     # set title of axes
     ax.set_ylabel(y_axis, fontsize=15)
@@ -36,7 +48,7 @@ def main():
     if args.show_save == '0':
         plt.show()
     else:
-        plt.savefig('plots/task4b.png', bbox_inches='tight')
+        plt.savefig('plots/task4a.png', bbox_inches='tight')
         print('Saving plot in plots dir.')
     print('Done')
 

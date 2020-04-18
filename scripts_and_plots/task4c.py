@@ -18,7 +18,7 @@ def main():
     trans_dict = ut.trans_of_shorts(args.input_file)
 
     values = df.groupby(['country_id', 'year', 'City'])['AverageTemperatureCelsius'].mean()
-    cos = df.groupby(['country_id']).apply(lambda grp: grp.groupby('year')['AverageTemperatureCelsius'].mean().to_dict()).to_dict()
+    grouped_data = df.groupby(['country_id']).apply(lambda grp: grp.groupby('year')['AverageTemperatureCelsius'].mean().to_dict()).to_dict()
 
     # assigning columns' to the proper axes
     x_axis = 'year'
@@ -27,7 +27,7 @@ def main():
     fig, ax = plt.subplots(figsize=(10, 7))
 
     # crea
-    countries_to_legend = list(cos.keys())
+    countries_to_legend = list(grouped_data.keys())
     countries_to_legend.sort()
     colors = cm.gist_rainbow(np.linspace(0, 1, len(countries_to_legend)))   # create array of colors
     colors = np.delete(colors, -1, axis=1)  # remove alpha column
@@ -41,7 +41,7 @@ def main():
     dict_for_legend = {}
 
     # plotting and translating country_ids to countries to ax.legend()
-    for country, temps_per_year in cos.items():
+    for country, temps_per_year in grouped_data.items():
         dict_for_legend[trans_dict[country]] = dict_of_colors[country]  # translate country_ids to full countries in new dict
         ax.plot(list(temps_per_year.keys()), list(temps_per_year.values()), color=dict_of_colors[country], alpha=0.8, linewidth=2, label=trans_dict[country])
 
