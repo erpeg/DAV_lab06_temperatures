@@ -2,7 +2,7 @@
 import argparse
 import matplotlib.pyplot as plt
 import utility as ut
-import numpy as np
+
 
 def main():
     parser = argparse.ArgumentParser()

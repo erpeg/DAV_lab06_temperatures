@@ -3,6 +3,11 @@
 import csv
 import collections
 import numpy as np
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib import colors as mcolors
+import colorsys
+from matplotlib.colors import LinearSegmentedColormap as lsc
 
 # possible key_value: year, country_id, Country
 def dict_to_plot(list, x_axis, y_axis):
@@ -80,7 +85,7 @@ def data_for_box(file_path, xax, yax):
 def main_style(ax, plt):
     # background and grid
     ax.set_axisbelow(True)  # grid behind scatter
-    ax.set_facecolor('0.8') # background colour
+    ax.set_facecolor('0.85') # background colour
     ax.grid(which='major', b=True, linestyle='-', linewidth=1.5, color='0.95')
     ax.grid(which='minor', b=True, linestyle='-', linewidth=.5, color='0.95')
 
@@ -123,11 +128,38 @@ def plot_gui_setup_box(ax, plt):
     main_style(ax, plt)
     return ax, plt
 
+def plot_gui_setup_time(ax, plt):
+    # setting values of ticks for future grid
+    major_xticks = np.arange(1800, 2100, 100)
+    major_yticks = np.arange(0, 25, 5)
+    minor_xticks = np.arange(1750, 2000, 50)
+    minor_yticks = np.arange(-5, 20, 2.5)
+
+    ax.set_xticks(major_xticks)
+    ax.set_yticks(major_yticks)
+    ax.set_xticks(minor_xticks, minor=True)
+    ax.set_yticks(minor_yticks, minor=True)
+
+    main_style(ax, plt)
+    return ax, plt
+
 def boxes_style(bp):
     # change color and linewidth of the medians
     [median.set(color='black', linewidth=2) for median in bp['medians']]
 
     # change color and linewidth of the caps
     [cap.set(linewidth=0) for cap in bp['caps']]
+
+    return bp
+
+def trans_of_shorts(file):
+    data = open_file(file)
+    dict_of_shorts = {}
+
+    for row in data:
+        if row[6] not in dict_of_shorts.keys():
+            dict_of_shorts[row[6]] = row[7]
+    return dict_of_shorts
+
 
 
