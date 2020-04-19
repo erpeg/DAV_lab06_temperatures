@@ -19,11 +19,11 @@ def main():
     trans_dict = ut.trans_of_shorts(args.input_file)
 
     values = df.groupby(['country_id', 'year', 'City'])['AverageTemperatureCelsius'].mean()
-    grouped_data = df.groupby(['country_id']).apply(lambda grp: grp.groupby('year')['AverageTemperatureCelsius'].mean().to_dict()).to_dict()
+    grouped_data = df.groupby(['country_id']).apply(lambda grp : grp.groupby(['City']).apply(lambda grp: grp.groupby('year')['AverageTemperatureCelsius'].mean().to_dict()).to_dict()).to_dict()
 
     # assigning columns' to the proper axes
     x_axis = 'year'
-    y_axis = 'CountryAverage'
+    y_axis = 'CityAverage'
 
     placing_plots = {
         'BRA':[0, 0],
@@ -54,44 +54,46 @@ def main():
     list_for_legend = []
 
     # plotting and translating country_ids to countries to ax.legend()
-    for country, temps_per_year in grouped_data.items():
+    for country, city_data in grouped_data.items():
+        for city, temps_per_year in city_data.items():
+
+            dict_for_legend[trans_dict[country]] = dict_of_colors[country]  # translate country_ids to full countries in new dict
+            l, = axs[placing_plots[country][0], placing_plots[country][1]].plot(list(temps_per_year.keys()), list(temps_per_year.values()), color=dict_of_colors[country], alpha=0.8, linewidth=2, label=city)
+            title = axs[placing_plots[country][0], placing_plots[country][1]].set_title(trans_dict[country], backgroundcolor='silver')
+            title._bbox_patch._mutation_aspect = 0.03
+
+            # applying styles of plotting area
+            ut.plot_gui_setup_time_many_white(axs[placing_plots[country][0], placing_plots[country][1]], plt)
+
+            if placing_plots[country][1] in [1, 2]:
+                if placing_plots[country][0] != 2:
+                    axs[placing_plots[country][0], placing_plots[country][1]].tick_params(which='major', color='1')
+
+            # setting titlebox background
+            if placing_plots[country][0] == 0:
+                if country == 'FRA':
+                    title.get_bbox_patch().set_boxstyle("square", pad=7.02)
+                elif country == 'JAP':
+                    title.get_bbox_patch().set_boxstyle("square", pad=7.35)
+                else:
+                    plt.xticks(color='white')
+                    title.get_bbox_patch().set_boxstyle("square", pad=7.3)
+            elif placing_plots[country][0] == 1:
+                if country == 'NEW':
+                    plt.xticks(color='white')
+                    title.get_bbox_patch().set_boxstyle("square", pad=5.4)
+                elif country == 'POL':
+                    title.get_bbox_patch().set_boxstyle("square", pad=7.)
+                else:
+                    title.get_bbox_patch().set_boxstyle("square", pad=5.7)
+            else:
+                if country == 'UKR':
+                    plt.xticks(color='gray', alpha=0.7)
+                    title.get_bbox_patch().set_boxstyle("square", pad=6.73)
+                else:
+                    title.get_bbox_patch().set_boxstyle("square", pad=6.7)
+            axes.append(l)
         list_for_legend.append(trans_dict[country])
-        dict_for_legend[trans_dict[country]] = dict_of_colors[country]  # translate country_ids to full countries in new dict
-        l, = axs[placing_plots[country][0], placing_plots[country][1]].plot(list(temps_per_year.keys()), list(temps_per_year.values()), color=dict_of_colors[country], alpha=0.8, linewidth=2, label=trans_dict[country])
-        title = axs[placing_plots[country][0], placing_plots[country][1]].set_title(trans_dict[country], backgroundcolor='silver')
-        title._bbox_patch._mutation_aspect = 0.03
-
-        # applying styles of plotting area
-        ut.plot_gui_setup_time_many(axs[placing_plots[country][0], placing_plots[country][1]], plt)
-
-        if placing_plots[country][1] in [1, 2]:
-            if placing_plots[country][0] != 2:
-                axs[placing_plots[country][0], placing_plots[country][1]].tick_params(which='major', color='1')
-
-        # setting titlebox background
-        if placing_plots[country][0] == 0:
-            if country == 'FRA':
-                title.get_bbox_patch().set_boxstyle("square", pad=7.02)
-            elif country == 'JAP':
-                title.get_bbox_patch().set_boxstyle("square", pad=7.35)
-            else:
-                plt.xticks(color='white')
-                title.get_bbox_patch().set_boxstyle("square", pad=7.3)
-        elif placing_plots[country][0] == 1:
-            if country == 'NEW':
-                plt.xticks(color='white')
-                title.get_bbox_patch().set_boxstyle("square", pad=5.4)
-            elif country == 'POL':
-                title.get_bbox_patch().set_boxstyle("square", pad=7.)
-            else:
-                title.get_bbox_patch().set_boxstyle("square", pad=5.7)
-        else:
-            if country == 'UKR':
-                plt.xticks(color='gray', alpha=0.7)
-                title.get_bbox_patch().set_boxstyle("square", pad=6.73)
-            else:
-                title.get_bbox_patch().set_boxstyle("square", pad=6.7)
-        axes.append(l)
 
 
     # set title of axes
@@ -99,8 +101,7 @@ def main():
     axs[placing_plots['NEW'][0], placing_plots['NEW'][1]].set_xlabel(x_axis, fontsize=18)
     axs[2, 1].set_xlabel('year', fontsize=18)
 
-
-    fig.legend(axes, list_for_legend, title='$\\bf{Country}$', title_fontsize=19, borderaxespad=-8, loc='center right', frameon=False, fontsize=16, handlelength=2, handleheight=1.5)._legend_box.align = "left"
+    fig.legend(axes, list_for_legend, title='$\\bf{Country}$', title_fontsize=19, borderaxespad=0, loc='center right', frameon=False, fontsize=16, handlelength=2, handleheight=1.5)._legend_box.align = "left"
 
     plt.subplots_adjust(right=2)
 
@@ -109,6 +110,7 @@ def main():
 
     # removing one of plots
     axs[2, 2].remove()
+
 
     # # add and customize legend
     # plt.legend(dict_for_legend)
@@ -123,7 +125,7 @@ def main():
         plt.show()
     else:
         fig.set_size_inches(5.28, 8, forward=True)
-        plt.savefig('plots/task5a.png', bbox_inches='tight')
+        plt.savefig('plots/task5c.png', bbox_inches='tight')
         print('Saving plot in plots dir.')
     print('Done')
 

@@ -176,5 +176,38 @@ def trans_of_shorts(file):
             dict_of_shorts[row[6]] = row[7]
     return dict_of_shorts
 
+# main styles of plot and labels
+def main_style_white(ax, plt):
+    # background and grid
+    ax.set_axisbelow(True)  # grid behind scatter
+    ax.set_facecolor('1') # background colour
+    ax.grid(which='major', b=True, linestyle='-', linewidth=1.5, color='0.8')
+    ax.grid(which='minor', b=True, linestyle='-', linewidth=.5, color='0.85')
+
+
+    # set properties of ticks
+    plt.xticks(color='gray', alpha=0.7)
+    plt.yticks(color='gray', alpha=0.7)
+    ax.tick_params(which='major', labelsize=15, length=5, width=1, color='0.7') # showing major spines
+    ax.tick_params(which='minor', color='1') # hiding minor spines
+
+    # hiding frames
+    return ax, plt
+
+def plot_gui_setup_time_many_white(ax, plt):
+    # setting values of ticks for future grid
+    major_xticks = np.arange(1800, 2100, 100)
+    major_yticks = np.arange(0, 25, 5)
+    minor_xticks = np.arange(1750, 2000, 50)
+    minor_yticks = np.arange(-5, 25, 2.5)
+
+    ax.set_xticks(major_xticks)
+    ax.set_yticks(major_yticks)
+    ax.set_xticks(minor_xticks, minor=True)
+    ax.set_yticks(minor_yticks, minor=True)
+
+    main_style_white(ax, plt)
+    return ax, plt
+
 
 

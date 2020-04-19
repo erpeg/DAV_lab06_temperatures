@@ -24,7 +24,8 @@ def main():
     bp = ax.violinplot(temps)
     ax.set_ylim(ut.max_min(temps)[2:4])
 
-
+    country += 'A'
+    country.sort()
     # custom x-axis labels
     ax.set_xticklabels(country)
 
