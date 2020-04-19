@@ -143,6 +143,21 @@ def plot_gui_setup_time(ax, plt):
     main_style(ax, plt)
     return ax, plt
 
+def plot_gui_setup_time_many(ax, plt):
+    # setting values of ticks for future grid
+    major_xticks = np.arange(1800, 2100, 100)
+    major_yticks = np.arange(0, 25, 5)
+    minor_xticks = np.arange(1750, 2000, 50)
+    minor_yticks = np.arange(-5, 25, 2.5)
+
+    ax.set_xticks(major_xticks)
+    ax.set_yticks(major_yticks)
+    ax.set_xticks(minor_xticks, minor=True)
+    ax.set_yticks(minor_yticks, minor=True)
+
+    main_style(ax, plt)
+    return ax, plt
+
 def boxes_style(bp):
     # change color and linewidth of the medians
     [median.set(color='black', linewidth=2) for median in bp['medians']]
